@@ -60,6 +60,7 @@ LaserEffect::LaserEffect()
                                                              "}\n");
 
     m_shaderprog->addShaderFromSourceCode(QGLShader::Fragment, "uniform float radius;\n"
+                                                               "uniform float beam_ratio;\n"
                                                                "varying vec3 startp;\n"
                                                                "varying vec3 endp;\n"
                                                                "varying vec3 pos;\n"
@@ -76,14 +77,27 @@ LaserEffect::LaserEffect()
                                                                "    float d = dot(u, w);\n"
                                                                "    float e = dot(v, w);\n"
                                                                "    float D = a*c - b*b;\n"
-                                                               "    float sc, tc;\n"
+                                                               "    float sc, tc, sN, tN, sD = D, tD = D;\n"
                                                                "    if (D < SMALL_NUM) {\n"
-                                                               "        sc = 0.0;\n"
-                                                               "        tc = (b > c ? d/b : e/c);\n"
+                                                               "        sN = 0.0;\n"
+                                                               "        sD = 1.0;\n"
+                                                               "        tN = e;\n"
+                                                               "        tD = c;\n"
                                                                "    } else {\n"
-                                                               "        sc = (b*e - c*d) / D;\n"
-                                                               "        tc = (a*e - b*d) / D;\n"
+                                                               "        sN = (b*e - c*d);\n"
+                                                               "        tN = (a*e - b*d);\n"
+                                                               "        if (sN < 0.0) {\n"
+                                                               "            sN = 0.0;\n"
+                                                               "            tN = e;\n"
+                                                               "            tD = c;\n"
+                                                               "        } else if (sN > sD) {\n"
+                                                               "            sN = sD;\n"
+                                                               "            tN = e + b;\n"
+                                                               "            tD = c;\n"
+                                                               "        }\n"
                                                                "    }\n"
+                                                               "    sc = abs(sN) < SMALL_NUM ? 0.0 : sN / sD;\n"
+                                                               "    tc = abs(tN) < SMALL_NUM ? 0.0 : tN / tD;\n"
                                                                "    vec3 dP = w + (sc * u) - (tc * v);\n"
                                                                "    return length(dP);\n"
                                                                "}\n"
@@ -91,7 +105,12 @@ LaserEffect::LaserEffect()
                                                                "void main(void)\n"
                                                                "{\n"
                                                                "    float dist = dist_segments(startp, endp, vec3(0.0), pos);\n"
-                                                               "    vec3 color = gl_Color.xyz * (1.0 - dist/radius);\n"
+                                                               "    float factor = 1.0 - dist/radius;\n"
+                                                               "    vec3 color;\n"
+                                                               "    if (dist < beam_ratio * radius)\n"
+                                                               "        color = mix(vec3(1.0, 1.0, 1.0), gl_Color.xyz, dist/(beam_ratio*radius)) * factor;\n"
+                                                               "    else\n"
+                                                               "        color = gl_Color.xyz * factor;\n"
                                                                "    gl_FragColor = vec4(color, 1.0);\n"
                                                                "}\n");
     m_shaderprog->link();
@@ -102,12 +121,8 @@ LaserEffect::~LaserEffect()
     glDeleteBuffers(1, &m_vbo);
 }
 
-void LaserEffect::draw(const Vector3 &start, const Vector3 &end, float radius)
+void LaserEffect::draw(const Vector3 &start, const Vector3 &end, float radius, float beam_ratio)
 {
-    glBegin(GL_LINES);
-    glVertex3fv(start.xyz); glVertex3fv(end.xyz);
-    glEnd();
-
     Vector3 dir = end - start;
     float vlen = dir.length();
     float len = vlen + radius + radius; 
@@ -116,12 +131,14 @@ void LaserEffect::draw(const Vector3 &start, const Vector3 &end, float radius)
     GLfloat mv[16];
     glGetFloatv(GL_MODELVIEW_MATRIX, mv);
 
-    glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
+    glCullFace(GL_FRONT);
+    glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
 
     m_shaderprog->bind();
     m_shaderprog->setUniformValue("start", start.x, start.y, start.z);
     m_shaderprog->setUniformValue("end", end.x, end.y, end.z);
     m_shaderprog->setUniformValue("radius", radius);
+    m_shaderprog->setUniformValue("beam_ratio", beam_ratio);
     glUniformMatrix4fv(m_shaderprog->uniformLocation("camera_mv"), 1, GL_FALSE, mv);
     glPushMatrix();
 
@@ -143,4 +160,5 @@ void LaserEffect::draw(const Vector3 &start, const Vector3 &end, float radius)
     m_shaderprog->release();
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glCullFace(GL_BACK);
 }

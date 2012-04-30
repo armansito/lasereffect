@@ -8,6 +8,7 @@ GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent)
     setFocusPolicy(Qt::StrongFocus);
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(tick()));
     m_camera = new Camera(45.f, 1.f, 0.1f, 1000);
+    m_camera->setCenter(Vector3(0.f, 5.f, 0.f));
     m_lasereffect = NULL;
 }
 
@@ -19,13 +20,15 @@ GLWidget::~GLWidget()
 
 void GLWidget::initializeGL()
 {
-    glClearColor(0.f, 0.f, 0.f, 0.f);
+    glClearColor(0.2f, 0.2f, 0.2f, 1.f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_CULL_FACE);
 
+    /* ======== Initialize a LaserEffect instance when the OpenGL context gets created ======== */
     m_lasereffect = new LaserEffect();
+    /* ======================================================================================== */
 
     m_timer.start(1000/60);
 }
@@ -41,7 +44,7 @@ void GLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_camera->loadModelviewMatrix();
 
-    glColor3f(0.7f, 0.7f, 0.7f);
+    glColor3f(0.3f, 0.3f, 0.3f);
     glBegin(GL_LINES);
     const float incr = 2.f;
     const float dim = 10.f; 
@@ -54,9 +57,13 @@ void GLWidget::paintGL()
         glVertex3f(i, 0.f,-dim*incr);
     }
     glEnd();
-    glColor3f(0.f, 0.f, 1.f);
 
-    m_lasereffect->draw(Vector3(-1.f, 1.f, 1.f), Vector3(1.f, 1.f, -1.f), 0.5f);
+    static float rot = 0;
+    /* ========  This is where you render the laser ======== */
+    glColor3f(0.f, 1.f, 0.f);
+    glRotatef(rot++, 0.f, 1.f, 0.f);
+    m_lasereffect->draw(Vector3(-1.f, 5.f, 1.f), Vector3(1.f, 5.f, -1.f), 0.4f, 0.35f);
+    /* ===================================================== */
 }
 
 void GLWidget::tick()
