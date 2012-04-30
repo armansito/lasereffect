@@ -8,8 +8,8 @@ Usage
 
 To render a laser beam, first set the glow color by calling 'glColor' and then call 'LaserEffect::draw' on the instance you created:
 
-  <code>LaserEffect effect;
-        glColor3f(0.f, 1.f, 0.f);
+  <code>LaserEffect effect;\n
+        glColor3f(0.f, 1.f, 0.f);\n
         effect.draw(Vector3(-1.f, 5.f, 1.f), Vector3(1.f, 5.f, -1.f), 0.4f, 0.35f);
   </code>
 
