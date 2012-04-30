@@ -59,9 +59,10 @@ void GLWidget::paintGL()
     glEnd();
 
     static float rot = 0;
+    glRotatef(rot++, 0.f, 1.f, 0.f);
+
     /* ========  This is where you render the laser ======== */
     glColor3f(0.f, 1.f, 0.f);
-    glRotatef(rot++, 0.f, 1.f, 0.f);
     m_lasereffect->draw(Vector3(-1.f, 5.f, 1.f), Vector3(1.f, 5.f, -1.f), 0.4f, 0.35f);
     /* ===================================================== */
 }
