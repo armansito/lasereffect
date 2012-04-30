@@ -140,6 +140,7 @@ void LaserEffect::draw(const Vector3 &start, const Vector3 &end, float radius, f
     m_shaderprog->setUniformValue("radius", radius);
     m_shaderprog->setUniformValue("beam_ratio", beam_ratio);
     glUniformMatrix4fv(m_shaderprog->uniformLocation("camera_mv"), 1, GL_FALSE, mv);
+    
     glPushMatrix();
 
     glTranslatef(start.x, start.y, start.z);    
