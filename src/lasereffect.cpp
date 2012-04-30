@@ -2,6 +2,7 @@
 
 #ifndef __APPLE__
 extern "C" {
+    void glUniformMatrix4fv(GLint, GLsizei, GLboolean, const GLfloat *);
     void glBindBuffer (GLenum, GLuint);
     void glDeleteBuffers (GLsizei, const GLuint *);
     void glGenBuffers (GLsizei, GLuint *);
