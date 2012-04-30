@@ -7,6 +7,7 @@
 #include <QMouseEvent>
 #include "vector.h"
 
+class LaserEffect;
 class Camera;
 
 class GLWidget : public QGLWidget
@@ -27,6 +28,7 @@ private:
 
     QTimer m_timer;
     Camera *m_camera;
+    LaserEffect *m_lasereffect;
 
     Vector2 m_mousepos;
 
