@@ -1,7 +1,7 @@
 Description
 ===========
 
-Simple volumetric laser-beam renderer using Qt.
+Simple volumetric laser-beam renderer. The demo uses the Qt framework.
 
 Usage
 =====

@@ -2,8 +2,11 @@
 #define LASEREFFECT_H 
 
 #include "vector.h"
-#include <QGLShaderProgram>
-#include <qgl.h>
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
+#include <gl.h>
+#endif
 
 class LaserEffect
 {
@@ -25,7 +28,7 @@ public:
     void draw(const Vector3 &start, const Vector3 &end, float radius, float beam_ratio);
 
 private:
-    QGLShaderProgram *m_shaderprog;
+    GLuint m_prog, m_vert, m_frag;
     GLuint m_vbo;
     unsigned int m_count;
 };
