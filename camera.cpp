@@ -4,8 +4,8 @@
 Camera::Camera(float fovy, float aspect, float near, float far) : m_fovy(fovy), m_aspect(aspect), m_near(near), m_far(far)
 {
     setProjectionMode(false);
-    m_hangle = 0.f;//M_PI_4;
-    m_vangle = 0.f;//M_PI_4;
+    m_hangle = 0.f;
+    m_vangle = 0.f;
     m_look = Vector3::fromAngles(m_hangle-M_PI_2, -m_vangle);
     m_zoom = 5.f; 
 }
