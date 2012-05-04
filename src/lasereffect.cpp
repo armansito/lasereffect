@@ -179,7 +179,7 @@ void LaserEffect::draw(const Vector3 &start, const Vector3 &end, float radius, f
     glPushMatrix();
 
     glTranslatef(start.x, start.y, start.z);    
-    glRotatef(angles.x * 180.f/M_PI, 0.f, 1.f, 0.f);
+    glRotatef(angles.x * 180.f/M_PI + 90.f, 0.f, 1.f, 0.f);
     glRotatef(angles.y * 180.f/M_PI, 1.f, 0.f, 0.f);
     glTranslatef(0.f, 0.f, -vlen*0.5f);
     glScalef(radius, radius, len*0.5f);
