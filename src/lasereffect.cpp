@@ -7,7 +7,9 @@ extern "C" {
     void glShaderSource(GLuint, GLsizei, const GLchar **, const GLint *);
     void glCompileShader(GLuint);
     void glUniformMatrix4fv(GLint, GLsizei, GLboolean, const GLfloat *);
-    GLuint glCreateProgram(GLvoid);
+    GLuint glCreateProgram();
+    void glAttachShader(GLuint, GLuint);
+    void glLinkProgram(GLuint);
     void glUseProgram(GLuint);
     void glUniform3fv(GLint, GLsizei, const GLfloat *);
     void glUniform1f(GLint, GLfloat);
