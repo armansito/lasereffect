@@ -168,7 +168,7 @@ void LaserEffect::draw(const Vector3 &start, const Vector3 &end, float radius, f
     GLfloat mv[16];
     glGetFloatv(GL_MODELVIEW_MATRIX, mv);
 
-    glCullFace(GL_FRONT);
+//    glCullFace(GL_FRONT);
     glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
 
     glUseProgram(m_prog);
@@ -198,5 +198,5 @@ void LaserEffect::draw(const Vector3 &start, const Vector3 &end, float radius, f
     glUseProgram(0);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glCullFace(GL_BACK);
+//    glCullFace(GL_BACK);
 }
