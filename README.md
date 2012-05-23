@@ -16,4 +16,5 @@ the result of which looks like this:
 ![](https://github.com/armanuguray/lasereffect/blob/master/img/img.png?raw=true)
 
 This will render a laser "beam segment" with a green glow. If your application has a rendering loop that gets constantly updated, repeatedly constructing a LaserEffect instance
-will be inefficient. You should ideally create a LaserEffect instance when the OpenGL context is constructed and ready (in a Qt application, this would be in `QGLWidget::initializeGL()`).
+will be inefficient. You should ideally create a LaserEffect instance when the OpenGL context is constructed and ready (in a Qt application, this would be in `QGLWidget::initializeGL()`) and
+reuse it.
